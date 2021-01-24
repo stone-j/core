@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.ArrayHelper;
-import core.ConsoleHelper;
 import core.MathHelper;
 
 public class Threshold {

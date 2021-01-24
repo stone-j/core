@@ -39,8 +39,6 @@ import processing.core.PVector;
 import core.ConsoleHelper;
 import core.MathHelper;
 import core.ProcessingHelper;
-import core.openCV.Contour;
-import core.openCV.ContourComparator;
 
 /**
 * OpenCV is the main class for using OpenCV for Processing. Most of the documentation is found here.

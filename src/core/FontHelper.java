@@ -5,7 +5,6 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 public class FontHelper {
 	

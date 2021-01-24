@@ -7,8 +7,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import core.JPanelPaintable;
-
 public class GraphicalBorderPanel extends JPanel {
 	
 	public final static String FRAME06 = "frame06";

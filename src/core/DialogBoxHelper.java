@@ -2,8 +2,6 @@ package core;
 
 import javax.swing.JOptionPane;
 
-import core.ConsoleHelper;
-
 public class DialogBoxHelper {
 	
 	//---------------------------------------------------------------------------

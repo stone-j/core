@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 import processing.data.XML;
 
 public class XmlHelper {
-	
+
 	public XML loadXML(String filename, String options) {
 		try {
 			BufferedReader reader = createReader(filename);
@@ -48,7 +48,6 @@ public class XmlHelper {
 		}
 	}
 
-
 	static public BufferedReader createReader(InputStream input) {
 		InputStreamReader isr = new InputStreamReader(input, StandardCharsets.UTF_8);
 
@@ -56,40 +55,39 @@ public class XmlHelper {
 		return reader;
 	}
 
-
 	public BufferedReader createReader(String filename) {
 		InputStream is = createInput(filename);
 		return createReader(is);
 	}
 
-
 	public InputStream createInput(String filename) {
 		InputStream input = null;
 		try {
 			input = new FileInputStream(filename);
-		} catch (IOException e) { }
+		} catch (IOException e) {
+		}
 		return new BufferedInputStream(input);
 	}
 
 	public InputStream createInputRaw(String filename) {
 		try {
 			return new FileInputStream(filename);
-		} catch (IOException e1) { }
+		} catch (IOException e1) {
+		}
 
 		return null;
 	}
 
-
-	//---------------------------------------------------------------------------
-	//GetAbsoluteFilePathStringFromXml
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// GetAbsoluteFilePathStringFromXml
+	// ---------------------------------------------------------------------------
 	public String GetAbsoluteFilePathStringFromXml(String nodePath, XML[] xml) {
 		ConsoleHelper.PrintMessage("GetAbsoluteFilePathStringFromXml");
 
 		String myString = GetDataFromXml(nodePath, xml);
 
-		if(!myString.contains(":")) {
-			//myString = sketchPath("") + myString;
+		if (!myString.contains(":")) {
+			// myString = sketchPath("") + myString;
 			myString = System.getProperty("user.dir") + myString;
 		}
 
@@ -97,17 +95,18 @@ public class XmlHelper {
 		return myString;
 	}
 
-	//---------------------------------------------------------------------------
-	//GetDataFromXml
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// GetDataFromXml
+	// ---------------------------------------------------------------------------
 	public static String GetDataFromXml(String nodePath, XML[] xml) {
 		ConsoleHelper.PrintMessage("GetDataFromXml: " + nodePath);
 
-		//ConsoleHelper.PrintMessage("XML dump = " + xml[0].toString());
+		// ConsoleHelper.PrintMessage("XML dump = " + xml[0].toString());
 
 		String[] nodeName = nodePath.split("\\.");
 
-		//drill into the xml nodes (replacing "node" with the next node down on each iteration) until we reach the final node
+		// drill into the xml nodes (replacing "node" with the next node down on each
+		// iteration) until we reach the final node
 		for (int i = 0; i < nodeName.length; i++) {
 			ConsoleHelper.PrintMessage("Traversing node " + nodeName[i]);
 			xml = xml[0].getChildren(nodeName[i]);
@@ -116,27 +115,35 @@ public class XmlHelper {
 		return xml[0].getContent();
 	}
 
-
-	//---------------------------------------------------------------------------
-	//GetXMLFromFile
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// GetXMLFromFile
+	// ---------------------------------------------------------------------------
 	public XML[] GetXMLFromFile(String xmlFilePath) {
+		return GetXMLFromFile(xmlFilePath, "");
+	}
+
+	// ---------------------------------------------------------------------------
+	// GetXMLFromFile
+	// ---------------------------------------------------------------------------
+	public XML[] GetXMLFromFile(String xmlFilePath, String fallbackXmlFilePath) {
 		ConsoleHelper.PrintMessage("GetXMLFromFile");
 
 		ConsoleHelper.PrintMessage("xmlFilePath = " + xmlFilePath);
+		ConsoleHelper.PrintMessage("fallbackXmlFilePath = " + fallbackXmlFilePath);
 
-		File xmlFile;
+		File xmlFile = FileHelper.GetFileFromAbsoluteOrRelativeFilePath(xmlFilePath);
 		XML[] xml = new XML[1];
-
-		//the idea here is an absolute path will contain a colon, and a relative path will not.
-		if(xmlFilePath.contains(":")) {
-			xmlFile = new File(xmlFilePath);
+		
+		//if xmlFilePath whiffs, look to fallbackXmlFilePath
+		if (!xmlFile.exists() || xmlFile.isDirectory()) {
+			if (!fallbackXmlFilePath.equals("")) {
+				ConsoleHelper.PrintMessage("No valid XML file found for file: " + xmlFilePath);
+				ConsoleHelper.PrintMessage("Looking for fallbackXmlFilePath ...");
+				return GetXMLFromFile(fallbackXmlFilePath, "");
+			} else {
+				ConsoleHelper.PrintMessage("No valid XML file found for file: " + xmlFilePath);
+			}
 		} else {
-			//xmlFile = new File(sketchPath(""), xmlFilePath);
-			xmlFile = new File(System.getProperty("user.dir"), xmlFilePath);
-		}
-
-		if(xmlFile.exists() && !xmlFile.isDirectory()) { 
 			ConsoleHelper.PrintMessage("Found a valid file!");
 			xml[0] = loadXML(xmlFile.toString(), null);
 		}
@@ -144,63 +151,59 @@ public class XmlHelper {
 		return xml;
 	}
 
-
-	//---------------------------------------------------------------------------
-	//GetBooleanFromXml
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// GetBooleanFromXml
+	// ---------------------------------------------------------------------------
 	public boolean GetBooleanFromXml(String nodePath, XML[] xml) {
 		ConsoleHelper.PrintMessage("GetBooleanFromXml");
 
 		return (Integer.parseInt(GetDataFromXml(nodePath, xml)) == 0 ? false : true);
 	}
-		
-		
-	//---------------------------------------------------------------------------
-	//GetIntFromXml
-	//---------------------------------------------------------------------------
+
+	// ---------------------------------------------------------------------------
+	// GetIntFromXml
+	// ---------------------------------------------------------------------------
 	public int GetIntFromXml(String nodePath, XML[] xml) {
 		ConsoleHelper.PrintMessage("GetIntFromXml");
 
 		return Integer.parseInt(GetDataFromXml(nodePath, xml));
 	}
 
-
-	//---------------------------------------------------------------------------
-	//GetFloatFromXml
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
+	// GetFloatFromXml
+	// ---------------------------------------------------------------------------
 	public float GetFloatFromXml(String nodePath, XML[] xml) {
 		ConsoleHelper.PrintMessage("GetFloatFromXml");
 
 		return Float.parseFloat(GetDataFromXml(nodePath, xml));
 	}
 
-
-	//---------------------------------------------------------------------------
-	//AlterXML (Overload)
+	// ---------------------------------------------------------------------------
+	// AlterXML (Overload)
 	// SEE: https://www.mkyong.com/java/how-to-modify-xml-file-in-java-dom-parser/
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
 	public void AlterXML(String nodeName, String nodeValue, String xmlFilePath) {
 		ConsoleHelper.PrintMessage("AlterXML (Overload)");
 
 		String[][] myXmlData = new String[1][3];
-		myXmlData[0] = new String[] {nodeName, nodeValue, "0"};
+		myXmlData[0] = new String[] { nodeName, nodeValue, "0" };
 
 		AlterXML(myXmlData, xmlFilePath);
 	}
 
-
-	//---------------------------------------------------------------------------
-	//AlterXML
+	// ---------------------------------------------------------------------------
+	// AlterXML
 	// SEE: https://www.mkyong.com/java/how-to-modify-xml-file-in-java-dom-parser/
-	//---------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------
 	public void AlterXML(String[][] xmlData, String xmlFilePath) {
 		ConsoleHelper.PrintMessage("AlterXML");
 
 		try {
 			File xmlFile;
 
-			//the idea here is an absolute path will contain a colon, and a relative path will not.
-			if(xmlFilePath.contains(":")) {
+			// the idea here is an absolute path will contain a colon, and a relative path
+			// will not.
+			if (xmlFilePath.contains(":")) {
 				xmlFile = new File(xmlFilePath);
 			} else {
 				xmlFile = new File(System.getProperty("user.dir"), xmlFilePath);
@@ -212,21 +215,21 @@ public class XmlHelper {
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document doc = docBuilder.parse(filepath);
 
-			//for every xml tag/value we're trying to update
-			for(int i = 0; i < xmlData.length; i++) {
+			// for every xml tag/value we're trying to update
+			for (int i = 0; i < xmlData.length; i++) {
 				String[] nodePath = xmlData[i][0].split("\\.");
 				String finalNodeName = nodePath[nodePath.length - 1];
 
 				NodeList nodeList = doc.getElementsByTagName(finalNodeName);
 
-				//for each node in the XML that matches the tag name we're targeting
+				// for each node in the XML that matches the tag name we're targeting
 				for (int j = 0; j < nodeList.getLength(); j++) {
 					boolean correctNode = true;
 					Node currentNode = nodeList.item(j);
 					Node parentNode = currentNode;
 
-					//start with deepest node name and work out from there
-					//traverse the node tree from deepest (target) node to top ancestor
+					// start with deepest node name and work out from there
+					// traverse the node tree from deepest (target) node to top ancestor
 					for (int k = nodePath.length - 2; k >= 0; k--) {
 						if (parentNode.getParentNode().getNodeName().equals(nodePath[k])) {
 							parentNode = currentNode.getParentNode();
@@ -235,8 +238,8 @@ public class XmlHelper {
 						}
 					}
 
-					//if the full node tree matches our targeted XML, then we have a single match.
-					//update the value.
+					// if the full node tree matches our targeted XML, then we have a single match.
+					// update the value.
 					if (correctNode) {
 						currentNode.setTextContent(xmlData[i][1]);
 					}

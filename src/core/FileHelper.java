@@ -10,8 +10,6 @@ import java.io.OutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import core.ConsoleHelper;
-
 public class FileHelper {
 	
 	//---------------------------------------------------------------------------
@@ -37,6 +35,25 @@ public class FileHelper {
 		}
 
 		return filename.substring(extensionIndex + 1);
+	}
+	
+	
+	//---------------------------------------------------------------------------
+	// GetFileFromAbsoluteOrRelativeFilePath
+	//---------------------------------------------------------------------------
+	// the idea here is an absolute path will contain a colon, and a relative path
+	// will not.
+	public static File GetFileFromAbsoluteOrRelativeFilePath(String filePath) {
+		
+		File file;
+		
+		if (filePath.contains(":")) {
+			file = new File(filePath);
+		} else {
+			file = new File(System.getProperty("user.dir"), filePath);
+		}
+		
+		return file;
 	}
 	
 	
