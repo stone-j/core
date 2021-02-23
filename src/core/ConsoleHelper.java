@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ConsoleHelper {
-
-	public static enum MessageLevel {
+	
+	public enum MessageLevel {
 		NONE,
 		CRITICAL,
 		DEBUG,
@@ -13,13 +13,23 @@ public class ConsoleHelper {
 	}
 
 	//Change this value to NONE when going to production. It will disable all println statements.
-	private static MessageLevel systemMessageLevel = MessageLevel.DEBUG; //NONE, CRITICAL, DEBUG
+	private MessageLevel systemMessageLevel; //NONE, CRITICAL, DEBUG
 
+
+	public ConsoleHelper()
+	{
+		systemMessageLevel = MessageLevel.DEBUG;
+	}
+	
+	public ConsoleHelper(MessageLevel messageLevel)
+	{
+		systemMessageLevel = messageLevel;
+	}	
 	
 	//---------------------------------------------------------------------------
 	// PrintMessage
 	//---------------------------------------------------------------------------
-	synchronized public static void PrintMessage(String message, MessageLevel myMessageLevel) {
+	synchronized public void PrintMessage(String message, MessageLevel myMessageLevel) {
 		if (myMessageLevel.ordinal() <= systemMessageLevel.ordinal() || myMessageLevel.ordinal() == MessageLevel.MESSAGE.ordinal()) {
 			String timeStamp = new SimpleDateFormat("yyyy-MM-dd  KK:mm.ss[.SSS]").format(new Date());
 			System.out.println(timeStamp + " " + message);
@@ -29,14 +39,14 @@ public class ConsoleHelper {
 	//---------------------------------------------------------------------------
 	// PrintMessage
 	//---------------------------------------------------------------------------
-	synchronized public static void PrintMessage (String message) {
+	synchronized public void PrintMessage (String message) {
 		PrintMessage(message, MessageLevel.DEBUG);
 	}
 
 	//---------------------------------------------------------------------------
 	// PrintMessage
 	//---------------------------------------------------------------------------
-	synchronized public static void PrintMessage (int message) {
+	synchronized public void PrintMessage (int message) {
 		PrintMessage(Integer.toString(message), MessageLevel.DEBUG);
 	}
 
@@ -44,7 +54,7 @@ public class ConsoleHelper {
 	//---------------------------------------------------------------------------
 	// printStackTrace
 	//---------------------------------------------------------------------------
-	public static void printStackTrace(Throwable t) {
+	public void printStackTrace(Throwable t) {
 		t.printStackTrace();
 	}
 }

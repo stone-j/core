@@ -12,11 +12,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class FileHelper {
 	
+	public ConsoleHelper consoleHelper = new ConsoleHelper();
+	
 	//---------------------------------------------------------------------------
 	// getExtension
 	//---------------------------------------------------------------------------
-	public static String getExtension(String s) {
-		ConsoleHelper.PrintMessage("getExtension");
+	public String getExtension(String s) {
+		consoleHelper.PrintMessage("getExtension");
 		String separator = System.getProperty("file.separator");
 		String filename;
 
@@ -43,7 +45,7 @@ public class FileHelper {
 	//---------------------------------------------------------------------------
 	// the idea here is an absolute path will contain a colon, and a relative path
 	// will not.
-	public static File GetFileFromAbsoluteOrRelativeFilePath(String filePath) {
+	public File GetFileFromAbsoluteOrRelativeFilePath(String filePath) {
 		
 		File file;
 		
@@ -60,7 +62,7 @@ public class FileHelper {
 	//---------------------------------------------------------------------------
 	// GetFilenameFromFileChooser
 	//---------------------------------------------------------------------------
-	public static String GetFilenameFromFileChooser(String[] fileExtensions, String fileDecription) {
+	public String GetFilenameFromFileChooser(String[] fileExtensions, String fileDecription) {
 		return GetFilenameFromFileChooser(fileExtensions, fileDecription, "");
 	}
 		
@@ -68,8 +70,8 @@ public class FileHelper {
 	//---------------------------------------------------------------------------
 	// GetFilenameFromFileChooser
 	//---------------------------------------------------------------------------
-	public static String GetFilenameFromFileChooser(String[] fileExtensions, String fileDescription, String startingDirectory) {
-		ConsoleHelper.PrintMessage("GetFilenameFromFileChooser");
+	public String GetFilenameFromFileChooser(String[] fileExtensions, String fileDescription, String startingDirectory) {
+		consoleHelper.PrintMessage("GetFilenameFromFileChooser");
 
 		JFileChooser chooser = new JFileChooser();
 		//File dataDir = new File(startingDirectory, "\\");
@@ -83,7 +85,7 @@ public class FileHelper {
 		chooser.setFileFilter(fileFilter);
 		int returnVal = chooser.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			ConsoleHelper.PrintMessage("You chose to open this file: " + chooser.getSelectedFile().getName());
+			consoleHelper.PrintMessage("You chose to open this file: " + chooser.getSelectedFile().getName());
 			return chooser.getSelectedFile().toString();
 		}
 		return null;
@@ -92,8 +94,8 @@ public class FileHelper {
 	//---------------------------------------------------------------------------
 	// GetFileNameFromFilePath
 	//---------------------------------------------------------------------------
-	synchronized public static String GetFileNameFromFilePath(String filePath) {
-		ConsoleHelper.PrintMessage("GetFileNameFromFilePath");
+	synchronized public String GetFileNameFromFilePath(String filePath) {
+		consoleHelper.PrintMessage("GetFileNameFromFilePath");
 		
 		File file = new File(filePath);
 		return file.getName();
@@ -102,8 +104,8 @@ public class FileHelper {
 	//---------------------------------------------------------------------------
 	// GetPathFromFilePath //still needs to be tested
 	//---------------------------------------------------------------------------
-	synchronized public static String GetPathFromFilePath(String filePath) {
-		ConsoleHelper.PrintMessage("GetPathFromFilePath");	
+	synchronized public String GetPathFromFilePath(String filePath) {
+		consoleHelper.PrintMessage("GetPathFromFilePath");	
 		
 		return filePath.substring(0, filePath.lastIndexOf(File.separator));
 	}
@@ -112,8 +114,8 @@ public class FileHelper {
 	//---------------------------------------------------------------------------
 	// remove file extension
 	//---------------------------------------------------------------------------
-	synchronized public static String removeExtension(String filename) {
-		ConsoleHelper.PrintMessage("removeExtension");
+	synchronized public String removeExtension(String filename) {
+		consoleHelper.PrintMessage("removeExtension");
 
 		int extensionIndex = filename.lastIndexOf(".");
 		if (extensionIndex == -1) {

@@ -116,6 +116,8 @@ public class OpenCV {
 	public final static int VERTICAL = 0;
 	public final static int BOTH = -1;
 	
+	public ConsoleHelper consoleHelper = new ConsoleHelper();
+	
 
   
   /**
@@ -149,8 +151,9 @@ public class OpenCV {
 //  }
   
   private void loadFromString(String pathToImg){
+	ProcessingHelper processingHelper = new ProcessingHelper();
   	//parent = theParent;
-  	PImage imageToLoad = ProcessingHelper.loadImage(pathToImg);
+  	PImage imageToLoad = processingHelper.loadImage(pathToImg);
   	init(imageToLoad.width, imageToLoad.height);
   	loadImage(imageToLoad);	
   }
@@ -491,14 +494,14 @@ public class OpenCV {
 		String cascadePath = getLibPath();
 		cascadePath += relativePath;
 				
-		ConsoleHelper.PrintMessage("Load cascade from: " + cascadePath);
+		consoleHelper.PrintMessage("Load cascade from: " + cascadePath);
 
 		classifier = new CascadeClassifier(cascadePath);   
       
       if(classifier.empty()){
-      	ConsoleHelper.PrintMessage("Cascade failed to load"); // raise exception here?
+      	consoleHelper.PrintMessage("Cascade failed to load"); // raise exception here?
       } else {
-      	ConsoleHelper.PrintMessage("Cascade loaded: " + cascadeFileName);
+      	consoleHelper.PrintMessage("Cascade loaded: " + cascadeFileName);
       }
 	}
 
@@ -521,9 +524,9 @@ public class OpenCV {
 			classifier = new CascadeClassifier(cascadeFilePath);   
 	        
 	        if(classifier.empty()){
-	        	ConsoleHelper.PrintMessage("Cascade failed to load"); // raise exception here?
+	        	consoleHelper.PrintMessage("Cascade failed to load"); // raise exception here?
 	        } else {
-	        	ConsoleHelper.PrintMessage("Cascade loaded from absolute path: " + cascadeFilePath);
+	        	consoleHelper.PrintMessage("Cascade loaded from absolute path: " + cascadeFilePath);
 	        }
 		} else {
 			loadCascade(cascadeFilePath);
@@ -854,7 +857,7 @@ public class OpenCV {
 		try{
 			Imgproc.adaptiveThreshold(getCurrentMat(), getCurrentMat(), 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, blockSize, c);
 		} catch(CvException e){
-			ConsoleHelper.PrintMessage("ERROR: adaptiveThreshold function only works on gray images.");
+			consoleHelper.PrintMessage("ERROR: adaptiveThreshold function only works on gray images.");
 		}
 	}
 	
@@ -870,7 +873,7 @@ public class OpenCV {
 		try{
 			Imgproc.equalizeHist(getCurrentMat(), getCurrentMat());
 		} catch(CvException e){
-			ConsoleHelper.PrintMessage("ERROR: equalizeHistogram only works on a gray image.");
+			consoleHelper.PrintMessage("ERROR: equalizeHistogram only works on a gray image.");
 		}
 	}
 	
@@ -1025,7 +1028,7 @@ public void open(int size) {
 			
 			Imgproc.findContours(getCurrentMat(), contourMat, new Mat(), contourFindingMode, Imgproc.CHAIN_APPROX_NONE);
 		} catch(CvException e){
-			ConsoleHelper.PrintMessage("ERROR: findContours only works with a gray image.");
+			consoleHelper.PrintMessage("ERROR: findContours only works with a gray image.");
 		}
 		  for (MatOfPoint c : contourMat) {
 		    result.add(new Contour(c));
@@ -1169,7 +1172,8 @@ public void open(int size) {
 	 * 			String with the path to the image
 	 */
 	public void loadImage(String imgPath){
-		loadImage(ProcessingHelper.loadImage(imgPath));
+		ProcessingHelper processingHelper = new ProcessingHelper();
+		loadImage(processingHelper.loadImage(imgPath));
 	}
 	
 	// NOTE: We're not handling the signed/unsigned

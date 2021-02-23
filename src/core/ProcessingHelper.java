@@ -29,18 +29,20 @@ import processing.data.Table;
 
 public class ProcessingHelper {
 	
+	public ConsoleHelper consoleHelper = new ConsoleHelper();
+	
 	//---------------------------------------------------------------------------
 	//loadImage
 	//---------------------------------------------------------------------------
-	public static PImage loadImage(String filename) {
-		return loadImage(filename, null);
+	public PImage loadImage(String filename) {
+		return this.loadImage(filename, null);
 	}
 
 
 	//---------------------------------------------------------------------------
 	//loadImage
 	//---------------------------------------------------------------------------
-	public static PImage loadImage(String filename, String extension) { //, Object params) {
+	public PImage loadImage(String filename, String extension) { //, Object params) {
 
 		if (extension == null) {
 			String lower = filename.toLowerCase();
@@ -71,7 +73,7 @@ public class ProcessingHelper {
 				//	        }
 				return image;
 			} catch (IOException e) {
-				ConsoleHelper.printStackTrace(e);
+				consoleHelper.printStackTrace(e);
 				return null;
 			}
 		}
@@ -143,7 +145,7 @@ public class ProcessingHelper {
 			}
 		} catch (Exception e) {
 			// show error, but move on to the stuff below, see if it'll work
-			ConsoleHelper.printStackTrace(e);
+			consoleHelper.printStackTrace(e);
 		}
 
 		String[] loadImageFormats = ImageIO.getReaderFormatNames();
@@ -151,7 +153,7 @@ public class ProcessingHelper {
 		if (loadImageFormats != null) {
 			for (int i = 0; i < loadImageFormats.length; i++) {
 				if (extension.equals(loadImageFormats[i])) {
-					return loadImageIO(filename);
+					return this.loadImageIO(filename);
 					//	          PImage image = loadImageIO(filename);
 					//	          if (params != null) {
 					//	            image.setParams(g, params);
@@ -170,8 +172,8 @@ public class ProcessingHelper {
 	//---------------------------------------------------------------------------
 	//loadImage
 	//---------------------------------------------------------------------------
-	protected static PImage loadImageTGA(String filename) throws IOException {
-		InputStream is = ProcessingHelper.createInput(filename);
+	protected PImage loadImageTGA(String filename) throws IOException {
+		InputStream is = this.createInput(filename);
 		if (is == null) return null;
 
 		byte header[] = new byte[18];
@@ -421,16 +423,16 @@ public class ProcessingHelper {
 	//---------------------------------------------------------------------------
 	//loadBytes
 	//---------------------------------------------------------------------------
-	public static byte[] loadBytes(String filename) {
+	public byte[] loadBytes(String filename) {
 		String lower = filename.toLowerCase();
 
-		InputStream is = ProcessingHelper.createInput(filename);
+		InputStream is = this.createInput(filename);
 		if (is != null) {
 			byte[] outgoing = loadBytes(is);
 			try {
 				is.close();
 			} catch (IOException e) {
-				ConsoleHelper.printStackTrace(e);  // shouldn't happen
+				consoleHelper.printStackTrace(e);  // shouldn't happen
 			}
 			return outgoing;
 		}
@@ -446,7 +448,7 @@ public class ProcessingHelper {
 	//---------------------------------------------------------------------------
 	//createInput
 	//---------------------------------------------------------------------------
-	public static InputStream createInput(String filename) {
+	public InputStream createInput(String filename) {
 		InputStream input = createInputRaw(filename);
 		return new BufferedInputStream(input);
 	}
@@ -455,7 +457,7 @@ public class ProcessingHelper {
 	//---------------------------------------------------------------------------
 	//createInputRaw
 	//---------------------------------------------------------------------------
-	public static InputStream createInputRaw(String filename) {
+	public InputStream createInputRaw(String filename) {
 
 		// First check whether this looks like a URL
 		if (filename.contains(":")) {  // at least smells like URL
@@ -487,7 +489,7 @@ public class ProcessingHelper {
 
 			} catch (IOException e) {
 				// changed for 0117, shouldn't be throwing exception
-				ConsoleHelper.printStackTrace(e);
+				consoleHelper.printStackTrace(e);
 				//System.err.println("Error downloading from URL " + filename);
 				return null;
 				//throw new RuntimeException("Error downloading from URL " + filename);
@@ -508,7 +510,7 @@ public class ProcessingHelper {
 			} catch (SecurityException se) { }  // online, whups
 
 		} catch (Exception e) {
-			ConsoleHelper.printStackTrace(e);
+			consoleHelper.printStackTrace(e);
 		}
 
 		return null;
@@ -518,7 +520,7 @@ public class ProcessingHelper {
 	//---------------------------------------------------------------------------
 	//loadImageIO
 	//---------------------------------------------------------------------------
-	protected static PImage loadImageIO(String filename) {
+	protected PImage loadImageIO(String filename) {
 		InputStream stream = createInput(filename);
 		if (stream == null) {
 			System.err.println("The image " + filename + " could not be found.");
@@ -549,7 +551,7 @@ public class ProcessingHelper {
 			return outgoing;
 
 		} catch (Exception e) {
-			ConsoleHelper.printStackTrace(e);
+			consoleHelper.printStackTrace(e);
 			return null;
 		}
 	}
@@ -558,7 +560,7 @@ public class ProcessingHelper {
 	//---------------------------------------------------------------------------
 	// loadTable
 	//---------------------------------------------------------------------------
-	public static Table loadTable(String filename, String options) {
+	public Table loadTable(String filename, String options) {
 		try {
 			String optionStr = Table.extensionOptions(true, filename, options);
 			String[] optionList = StringHelper.trim(StringHelper.split(optionStr, ','));
@@ -578,7 +580,7 @@ public class ProcessingHelper {
 			return new Table(input, optionStr);
 
 		} catch (IOException e) {
-			ConsoleHelper.printStackTrace(e);
+			consoleHelper.printStackTrace(e);
 			return null;
 		}
 	}
@@ -587,7 +589,7 @@ public class ProcessingHelper {
 	//---------------------------------------------------------------------------
 	//createGraphics
 	//---------------------------------------------------------------------------
-	synchronized public static PGraphics createGraphics(int w, int h, String renderer, String path) {
+	synchronized public PGraphics createGraphics(int w, int h, String renderer, String path) {
 		return makeGraphics(w, h, renderer, path, false);
 	}
 	
@@ -595,7 +597,7 @@ public class ProcessingHelper {
 	//---------------------------------------------------------------------------
 	//makeGraphics
 	//---------------------------------------------------------------------------
-	synchronized protected static PGraphics makeGraphics(int w, int h, String renderer, String path, boolean primary) {
+	synchronized protected PGraphics makeGraphics(int w, int h, String renderer, String path, boolean primary) {
 		//String openglError = external ?
 		//// This first one should no longer be possible
 		//"Before using OpenGL, first select " +
@@ -635,7 +637,7 @@ public class ProcessingHelper {
 						"specified with -Djava.library.path=/path/to/jogl");
 
 			} else {
-				ConsoleHelper.PrintMessage(ite.getTargetException().toString());
+				consoleHelper.PrintMessage(ite.getTargetException().toString());
 				Throwable target = ite.getTargetException();
 				throw new RuntimeException(target.getMessage());
 			}
@@ -651,13 +653,13 @@ public class ProcessingHelper {
 					throw new RuntimeException(e);
 
 				} else {
-					ConsoleHelper.PrintMessage(e.toString());
+					consoleHelper.PrintMessage(e.toString());
 					String msg = renderer + " needs to be updated " +
 							"for the current release of Processing.";
 					throw new RuntimeException(msg);
 				}
 			} else {
-				ConsoleHelper.PrintMessage(e.toString());
+				consoleHelper.PrintMessage(e.toString());
 				throw new RuntimeException(e.getMessage());
 			}
 		}

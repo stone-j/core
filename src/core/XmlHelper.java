@@ -26,6 +26,8 @@ import org.xml.sax.SAXException;
 import processing.data.XML;
 
 public class XmlHelper {
+	
+	public ConsoleHelper consoleHelper = new ConsoleHelper();
 
 	public XML loadXML(String filename, String options) {
 		try {
@@ -48,7 +50,7 @@ public class XmlHelper {
 		}
 	}
 
-	static public BufferedReader createReader(InputStream input) {
+	public BufferedReader createReader(InputStream input) {
 		InputStreamReader isr = new InputStreamReader(input, StandardCharsets.UTF_8);
 
 		BufferedReader reader = new BufferedReader(isr);
@@ -82,7 +84,7 @@ public class XmlHelper {
 	// GetAbsoluteFilePathStringFromXml
 	// ---------------------------------------------------------------------------
 	public String GetAbsoluteFilePathStringFromXml(String nodePath, XML[] xml) {
-		ConsoleHelper.PrintMessage("GetAbsoluteFilePathStringFromXml");
+		consoleHelper.PrintMessage("GetAbsoluteFilePathStringFromXml");
 
 		String myString = GetDataFromXml(nodePath, xml);
 
@@ -91,15 +93,15 @@ public class XmlHelper {
 			myString = System.getProperty("user.dir") + myString;
 		}
 
-		ConsoleHelper.PrintMessage("node = " + myString);
+		consoleHelper.PrintMessage("node = " + myString);
 		return myString;
 	}
 
 	// ---------------------------------------------------------------------------
 	// GetDataFromXml
 	// ---------------------------------------------------------------------------
-	public static String GetDataFromXml(String nodePath, XML[] xml) {
-		ConsoleHelper.PrintMessage("GetDataFromXml: " + nodePath);
+	public String GetDataFromXml(String nodePath, XML[] xml) {
+		consoleHelper.PrintMessage("GetDataFromXml: " + nodePath);
 
 		// ConsoleHelper.PrintMessage("XML dump = " + xml[0].toString());
 
@@ -108,7 +110,7 @@ public class XmlHelper {
 		// drill into the xml nodes (replacing "node" with the next node down on each
 		// iteration) until we reach the final node
 		for (int i = 0; i < nodeName.length; i++) {
-			ConsoleHelper.PrintMessage("Traversing node " + nodeName[i]);
+			consoleHelper.PrintMessage("Traversing node " + nodeName[i]);
 			xml = xml[0].getChildren(nodeName[i]);
 		}
 
@@ -126,25 +128,28 @@ public class XmlHelper {
 	// GetXMLFromFile
 	// ---------------------------------------------------------------------------
 	public XML[] GetXMLFromFile(String xmlFilePath, String fallbackXmlFilePath) {
-		ConsoleHelper.PrintMessage("GetXMLFromFile");
+		
+		FileHelper fileHelper = new FileHelper();
+		
+		consoleHelper.PrintMessage("GetXMLFromFile");
 
-		ConsoleHelper.PrintMessage("xmlFilePath = " + xmlFilePath);
-		ConsoleHelper.PrintMessage("fallbackXmlFilePath = " + fallbackXmlFilePath);
+		consoleHelper.PrintMessage("xmlFilePath = " + xmlFilePath);
+		consoleHelper.PrintMessage("fallbackXmlFilePath = " + fallbackXmlFilePath);
 
-		File xmlFile = FileHelper.GetFileFromAbsoluteOrRelativeFilePath(xmlFilePath);
+		File xmlFile = fileHelper.GetFileFromAbsoluteOrRelativeFilePath(xmlFilePath);
 		XML[] xml = new XML[1];
 		
 		//if xmlFilePath whiffs, look to fallbackXmlFilePath
 		if (!xmlFile.exists() || xmlFile.isDirectory()) {
 			if (!fallbackXmlFilePath.equals("")) {
-				ConsoleHelper.PrintMessage("No valid XML file found for file: " + xmlFilePath);
-				ConsoleHelper.PrintMessage("Looking for fallbackXmlFilePath ...");
+				consoleHelper.PrintMessage("No valid XML file found for file: " + xmlFilePath);
+				consoleHelper.PrintMessage("Looking for fallbackXmlFilePath ...");
 				return GetXMLFromFile(fallbackXmlFilePath, "");
 			} else {
-				ConsoleHelper.PrintMessage("No valid XML file found for file: " + xmlFilePath);
+				consoleHelper.PrintMessage("No valid XML file found for file: " + xmlFilePath);
 			}
 		} else {
-			ConsoleHelper.PrintMessage("Found a valid file!");
+			consoleHelper.PrintMessage("Found a valid file!");
 			xml[0] = loadXML(xmlFile.toString(), null);
 		}
 
@@ -155,7 +160,7 @@ public class XmlHelper {
 	// GetBooleanFromXml
 	// ---------------------------------------------------------------------------
 	public boolean GetBooleanFromXml(String nodePath, XML[] xml) {
-		ConsoleHelper.PrintMessage("GetBooleanFromXml");
+		consoleHelper.PrintMessage("GetBooleanFromXml");
 
 		return (Integer.parseInt(GetDataFromXml(nodePath, xml)) == 0 ? false : true);
 	}
@@ -164,7 +169,7 @@ public class XmlHelper {
 	// GetIntFromXml
 	// ---------------------------------------------------------------------------
 	public int GetIntFromXml(String nodePath, XML[] xml) {
-		ConsoleHelper.PrintMessage("GetIntFromXml");
+		consoleHelper.PrintMessage("GetIntFromXml");
 
 		return Integer.parseInt(GetDataFromXml(nodePath, xml));
 	}
@@ -173,7 +178,7 @@ public class XmlHelper {
 	// GetFloatFromXml
 	// ---------------------------------------------------------------------------
 	public float GetFloatFromXml(String nodePath, XML[] xml) {
-		ConsoleHelper.PrintMessage("GetFloatFromXml");
+		consoleHelper.PrintMessage("GetFloatFromXml");
 
 		return Float.parseFloat(GetDataFromXml(nodePath, xml));
 	}
@@ -183,7 +188,7 @@ public class XmlHelper {
 	// SEE: https://www.mkyong.com/java/how-to-modify-xml-file-in-java-dom-parser/
 	// ---------------------------------------------------------------------------
 	public void AlterXML(String nodeName, String nodeValue, String xmlFilePath) {
-		ConsoleHelper.PrintMessage("AlterXML (Overload)");
+		consoleHelper.PrintMessage("AlterXML (Overload)");
 
 		String[][] myXmlData = new String[1][3];
 		myXmlData[0] = new String[] { nodeName, nodeValue, "0" };
@@ -196,7 +201,7 @@ public class XmlHelper {
 	// SEE: https://www.mkyong.com/java/how-to-modify-xml-file-in-java-dom-parser/
 	// ---------------------------------------------------------------------------
 	public void AlterXML(String[][] xmlData, String xmlFilePath) {
-		ConsoleHelper.PrintMessage("AlterXML");
+		consoleHelper.PrintMessage("AlterXML");
 
 		try {
 			File xmlFile;

@@ -4,11 +4,13 @@ import javax.swing.JOptionPane;
 
 public class DialogBoxHelper {
 	
+	ConsoleHelper consoleHelper = new ConsoleHelper();
+	
 	//---------------------------------------------------------------------------
 	// WarningDialog
 	//---------------------------------------------------------------------------
-	public static boolean WarningDialog(String message) {
-		ConsoleHelper.PrintMessage("WarningDialog");
+	public boolean WarningDialog(String message) {
+		consoleHelper.PrintMessage("WarningDialog");
 
 		//JOptionPane.showMessageDialog(frame, warning, windowTitle);
 		JOptionPane.showMessageDialog(null, message);
@@ -20,8 +22,8 @@ public class DialogBoxHelper {
 	//---------------------------------------------------------------------------
 	// YesNoDialog
 	//---------------------------------------------------------------------------
-	public static boolean YesNoDialog(String question, String windowTitle) {
-		ConsoleHelper.PrintMessage("YesNoDialog");
+	public boolean YesNoDialog(String question, String windowTitle) {
+		consoleHelper.PrintMessage("YesNoDialog");
 
 		int dialogButton = JOptionPane.YES_NO_OPTION;
 		int dialogResult = JOptionPane.showConfirmDialog (null, question, windowTitle, dialogButton);

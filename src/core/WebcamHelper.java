@@ -7,13 +7,15 @@ import com.github.sarxos.webcam.Webcam;
 
 public class WebcamHelper {
 	
-	public static Webcam getWebcam(String webcamName, int webcamWidth, int webcamHeight, ExceptionLogger exceptionLogger) {
+	public ConsoleHelper consoleHelper = new ConsoleHelper();
+	
+	public Webcam getWebcam(String webcamName, int webcamWidth, int webcamHeight, ExceptionLogger exceptionLogger) {
 		
 		Webcam webcam = null;
 		
 		List<Webcam> webcams = Webcam.getWebcams();
 		for (Webcam w : webcams) {
-			ConsoleHelper.PrintMessage("webcam name = " + w.getName());
+			consoleHelper.PrintMessage("webcam name = " + w.getName());
 			if (w.getName().contains(webcamName)) {
 				webcam = w;
 			}
@@ -27,9 +29,9 @@ public class WebcamHelper {
 		webcam.setCustomViewSizes(new Dimension(webcamWidth, webcamHeight));
 		webcam.setViewSize(webcam.getCustomViewSizes()[0]);
 		
-		ConsoleHelper.PrintMessage("Webcam resolutions: ");
+		consoleHelper.PrintMessage("Webcam resolutions: ");
 		for (Dimension d : webcam.getViewSizes()) {
-			ConsoleHelper.PrintMessage(d.toString());
+			consoleHelper.PrintMessage(d.toString());
 		}
 		
 		return webcam;

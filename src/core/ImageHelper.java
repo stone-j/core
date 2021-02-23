@@ -15,6 +15,8 @@ import processing.core.PImage;
 
 public class ImageHelper {
 	
+	public ConsoleHelper consoleHelper = new ConsoleHelper();
+	
 	//---------------------------------------------------------------------------
 	// getScaledImage
 	//---------------------------------------------------------------------------
@@ -38,8 +40,8 @@ public class ImageHelper {
 	//---------------------------------------------------------------------------
 	// resizeImage
 	//---------------------------------------------------------------------------
-	public static PImage resizeImage(PImage image, int scale) {
-		ConsoleHelper.PrintMessage("resizeImage");
+	public PImage resizeImage(PImage image, int scale) {
+		consoleHelper.PrintMessage("resizeImage");
 
 		PImage localImage = image.get();
 		PImage localCopyImage = image.get();
@@ -49,8 +51,8 @@ public class ImageHelper {
 
 		localImage.loadPixels();
 
-		ConsoleHelper.PrintMessage("image dimensions: " + imageWidth + "px W x " + imageHeight + "px H");
-		ConsoleHelper.PrintMessage("scale: " + scale);
+		consoleHelper.PrintMessage("image dimensions: " + imageWidth + "px W x " + imageHeight + "px H");
+		consoleHelper.PrintMessage("scale: " + scale);
 
 		if (scale < 1) {
 			return localImage;
@@ -150,7 +152,7 @@ public class ImageHelper {
 	}
 	
 	
-	public static BufferedImage RotateImage180(BufferedImage img) {
+	public BufferedImage RotateImage180(BufferedImage img) {
 		return
 			pImageToBufferedImage(
 				RotateImage180(
@@ -236,13 +238,13 @@ public class ImageHelper {
 	//---------------------------------------------------------------------------
 	// bufferedImagetoPImage
 	//---------------------------------------------------------------------------
-	public static BufferedImage pImageToBufferedImage(PImage pImage) {
+	public BufferedImage pImageToBufferedImage(PImage pImage) {
 		return (BufferedImage)pImage.getNative();
 	}
 	
 	
 	//this method seems to be the only way to get a BufferedImage from file/URL WITH ALPHA
-	public static BufferedImage getBufferedImageWithAlphaChannelFromURL(String url) {
+	public BufferedImage getBufferedImageWithAlphaChannelFromURL(String url) {
 		
 		ImageIcon imageIcon = null;
 		
@@ -251,8 +253,8 @@ public class ImageHelper {
 		
 			try { imageIcon = new ImageIcon(new URL(url)); }
 			catch (MalformedURLException e) {
-				ConsoleHelper.printStackTrace(e);
-				ConsoleHelper.PrintMessage("Malformed URL is: " + url);
+				consoleHelper.printStackTrace(e);
+				consoleHelper.PrintMessage("Malformed URL is: " + url);
 			}
 		} else {
 			imageIcon = new ImageIcon(url);
@@ -264,7 +266,7 @@ public class ImageHelper {
 	}
 	
 	
-	public static BufferedImage imageToBufferedImage(Image image)
+	public BufferedImage imageToBufferedImage(Image image)
 	{
 	    BufferedImage newImage = new BufferedImage(
 	        image.getWidth(null),
@@ -278,7 +280,7 @@ public class ImageHelper {
 	}
 	
 	
-	public static PImage ReplacePortionOfImage(PImage masterImage, PImage imageToPaste, int xPos, int yPos) {
+	public PImage ReplacePortionOfImage(PImage masterImage, PImage imageToPaste, int xPos, int yPos) {
 
 		//imageToPaste.loadPixels();
 		

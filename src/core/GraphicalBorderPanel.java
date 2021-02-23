@@ -12,6 +12,8 @@ public class GraphicalBorderPanel extends JPanel {
 	public final static String FRAME06 = "frame06";
 	public final static String PLAIN_PURPLE = "plain_purple";
 	
+	public ConsoleHelper consoleHelper = new ConsoleHelper();
+	
 	JPanel centralJPanel;
 	String borderFolder;
 	
@@ -27,7 +29,7 @@ public class GraphicalBorderPanel extends JPanel {
 	public GraphicalBorderPanel(String myBorderFolder) {
 		super();
 		borderFolder = myBorderFolder;
-		ConsoleHelper.PrintMessage("If you invoke the GraphicalBorderPanel constructor with only argument [String myBorderFolder], you must call buildPanel(JPanel myCentralJPanel) later to avoid a null pointer exception.");
+		consoleHelper.PrintMessage("If you invoke the GraphicalBorderPanel constructor with only argument [String myBorderFolder], you must call buildPanel(JPanel myCentralJPanel) later to avoid a null pointer exception.");
 	}
 	
 	public GraphicalBorderPanel(JPanel myCentralJPanel, String myBorderFolder) {

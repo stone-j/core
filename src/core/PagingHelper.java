@@ -2,6 +2,8 @@ package core;
 
 public class PagingHelper {
 	
+	public ConsoleHelper consoleHelper = new ConsoleHelper();
+	
 	private int currentPageIndex = 0;
 	private int focusItemIndex;
 	private int focusItemPageIndex;
@@ -25,7 +27,7 @@ public class PagingHelper {
 	}
 	
 	public void setCurrentPageIndex(int n) {
-		ConsoleHelper.PrintMessage("pagingHelper.setCurrentPageIndex: " + n);		
+		consoleHelper.PrintMessage("pagingHelper.setCurrentPageIndex: " + n);		
 		currentPageIndex = n;
 	}
 	
@@ -52,7 +54,7 @@ public class PagingHelper {
 	}
 	
 	public void setFocusItem(int myFocusItemIndex) {
-		ConsoleHelper.PrintMessage("pagingHelper.setFocusItem: " + myFocusItemIndex);		
+		consoleHelper.PrintMessage("pagingHelper.setFocusItem: " + myFocusItemIndex);		
 		focusItemIndex = myFocusItemIndex;
 		focusItemPageIndex = currentPageIndex;
 	}

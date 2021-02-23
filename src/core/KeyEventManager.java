@@ -6,13 +6,15 @@ import java.awt.event.KeyEvent;
 
 public class KeyEventManager {
 	
+	public ConsoleHelper consoleHelper = new ConsoleHelper();
+	
 	//default constructor
 	public KeyEventManager() {
 		init();
 	}
 	
 	public void KeyCodeAction(int keyCode) {
-		ConsoleHelper.PrintMessage(keyCode);
+		consoleHelper.PrintMessage(keyCode);
 	}
 	
 	private void init() {
