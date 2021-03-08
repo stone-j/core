@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.swing.JFileChooser;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class FileHelper {
@@ -73,6 +75,21 @@ public class FileHelper {
 	public String GetFilenameFromFileChooser(String[] fileExtensions, String fileDescription, String startingDirectory) {
 		consoleHelper.PrintMessage("GetFilenameFromFileChooser");
 
+		//-----------------------------------------------
+		//this block attempts to set the file chooser 
+		// to a Windows-style file chooser
+		// https://stackoverflow.com/questions/51022662/having-the-windows-ui-display-when-using-jfilechooser/51074520
+		//-----------------------------------------------
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//-----------------------------------------------
+		//-----------------------------------------------
+		
 		JFileChooser chooser = new JFileChooser();
 		//File dataDir = new File(startingDirectory, "\\");
 		File dataDir = new File(startingDirectory, File.separator);
