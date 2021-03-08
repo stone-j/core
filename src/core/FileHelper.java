@@ -1,5 +1,7 @@
 package core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,10 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.swing.JFileChooser;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 public class FileHelper {
 	
@@ -68,45 +69,43 @@ public class FileHelper {
 		return GetFilenameFromFileChooser(fileExtensions, fileDecription, "");
 	}
 		
-			
+		
 	//---------------------------------------------------------------------------
 	// GetFilenameFromFileChooser
 	//---------------------------------------------------------------------------
 	public String GetFilenameFromFileChooser(String[] fileExtensions, String fileDescription, String startingDirectory) {
 		consoleHelper.PrintMessage("GetFilenameFromFileChooser");
-
-		//-----------------------------------------------
-		//this block attempts to set the file chooser 
-		// to a Windows-style file chooser
-		// https://stackoverflow.com/questions/51022662/having-the-windows-ui-display-when-using-jfilechooser/51074520
-		//-----------------------------------------------
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//-----------------------------------------------
-		//-----------------------------------------------
 		
-		JFileChooser chooser = new JFileChooser();
-		//File dataDir = new File(startingDirectory, "\\");
-		File dataDir = new File(startingDirectory, File.separator);
-		chooser.setSelectedFile(dataDir);
-		FileNameExtensionFilter fileFilter = 
-				new FileNameExtensionFilter(
-						fileDescription,
-						fileExtensions
-						);
-		chooser.setFileFilter(fileFilter);
-		int returnVal = chooser.showOpenDialog(null);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			consoleHelper.PrintMessage("You chose to open this file: " + chooser.getSelectedFile().getName());
-			return chooser.getSelectedFile().toString();
+		List<String> fileExtensionList = new ArrayList<>();
+		
+		for (String fileExtension : fileExtensions) {
+			fileExtensionList.add("*." + fileExtension);
 		}
-		return null;
-	}
+
+		File myDir = new File(startingDirectory);
+		ExtensionFilter fileFilter = new ExtensionFilter(fileDescription, fileExtensionList);
+		
+		File selectedFile;
+		
+		//stackoverflow.com/questions/39819319/windows-native-file-chooser-in-java			
+		//this prevents "toolkit not initialized" error
+		new JFXPanel();
+	    Platform.setImplicitExit(false);
+	    
+	    SynchronousJFXFileChooser chooser = new SynchronousJFXFileChooser (
+	    	myDir,
+	    	fileFilter
+	    );
+	    selectedFile = chooser.showOpenDialog();	            
+	    
+	    if (selectedFile != null) {
+	    	consoleHelper.PrintMessage("You chose to open this file: " + selectedFile.toString());
+	    	return selectedFile.toString();
+	    }
+	    
+	    return null;
+	}	
+		
 		
 	//---------------------------------------------------------------------------
 	// GetFileNameFromFilePath
