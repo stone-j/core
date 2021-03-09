@@ -19,7 +19,7 @@ public class ExceptionLogger implements UncaughtExceptionHandler {
 		logger = Logger.getLogger("MyLog");
 	    
 	    try {  
-	    	fileHandler = new FileHandler(System.getProperty("user.dir") + File.separator + "log/log.txt");  
+	    	fileHandler = new FileHandler(System.getProperty("user.dir") + File.separator + "log" + File.separator + "log.txt");  
 	        logger.addHandler(fileHandler);
 	        SimpleFormatter formatter = new SimpleFormatter();  
 	        fileHandler.setFormatter(formatter);  

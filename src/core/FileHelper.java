@@ -1,17 +1,11 @@
 package core;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.stage.FileChooser.ExtensionFilter;
 
 public class FileHelper {
 	
@@ -75,26 +69,15 @@ public class FileHelper {
 	//---------------------------------------------------------------------------
 	public String GetFilenameFromFileChooser(String[] fileExtensions, String fileDescription, String startingDirectory) {
 		consoleHelper.PrintMessage("GetFilenameFromFileChooser");
-		
-		List<String> fileExtensionList = new ArrayList<>();
-		
-		for (String fileExtension : fileExtensions) {
-			fileExtensionList.add("*." + fileExtension);
-		}
 
 		File myDir = new File(startingDirectory);
-		ExtensionFilter fileFilter = new ExtensionFilter(fileDescription, fileExtensionList);
 		
 		File selectedFile;
-		
-		//stackoverflow.com/questions/39819319/windows-native-file-chooser-in-java			
-		//this prevents "toolkit not initialized" error
-		new JFXPanel();
-	    Platform.setImplicitExit(false);
 	    
 	    SynchronousJFXFileChooser chooser = new SynchronousJFXFileChooser (
 	    	myDir,
-	    	fileFilter
+	    	fileDescription,
+	    	fileExtensions	    	
 	    );
 	    selectedFile = chooser.showOpenDialog();	            
 	    

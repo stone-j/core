@@ -1,11 +1,14 @@
 package core;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -46,9 +49,25 @@ public class SynchronousJFXFileChooser {
 //        this.fileChooserFactory = fileChooserFactory;
 //    }
     
-    public SynchronousJFXFileChooser(File initialDirectory, ExtensionFilter extensionFilter) {
-        this.fileChooser.setInitialDirectory(initialDirectory);
-        this.fileChooser.getExtensionFilters().addAll(extensionFilter);
+    public SynchronousJFXFileChooser(File initialDirectory, String extensionFilterDescription, String[] extensionFilterFiletypes) {
+    	List<String> fileExtensionList = new ArrayList<>();
+    	
+    	for (String fileExtension : extensionFilterFiletypes) {
+			fileExtensionList.add("*." + fileExtension);
+		}
+    	
+    	ExtensionFilter fileFilter = new ExtensionFilter(
+    		extensionFilterDescription,
+    		fileExtensionList
+		);
+
+		// stackoverflow.com/questions/39819319/windows-native-file-chooser-in-java
+		// this prevents "toolkit not initialized" error
+		new JFXPanel();
+		Platform.setImplicitExit(false);
+			
+		this.fileChooser.setInitialDirectory(initialDirectory);
+        this.fileChooser.getExtensionFilters().addAll(fileFilter);
     }
 
     /**
@@ -93,14 +112,13 @@ public class SynchronousJFXFileChooser {
      * @throws IllegalStateException if Platform.runLater() fails to start
      * the dialog-showing task within the given timeout
      */
-    public <T> T showDialog(Function<FileChooser, T> method,
-            long timeout, TimeUnit unit) {
+    public <T> T showDialog(Function<FileChooser, T> method, long timeout, TimeUnit unit) {
         Callable<T> task = () -> {
             return method.apply(fileChooser);
         };
         SynchronousJFXCaller<T> caller = new SynchronousJFXCaller<>(task);
         try {
-            return caller.call(timeout, unit);
+    		return caller.call(timeout, unit);
         } catch (RuntimeException | Error ex) {
             throw ex;
         } catch (InterruptedException ex) {
