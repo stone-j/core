@@ -27,8 +27,22 @@ import processing.data.XML;
 
 public class XmlHelper {
 	
-	public ConsoleHelper consoleHelper = new ConsoleHelper();
+	public ConsoleHelper consoleHelper;
+	boolean useAppData;
+	String appDataFolderName;
 
+	
+//	public XmlHelper() {
+//		consoleHelper = new ConsoleHelper();
+//	}
+	
+	public XmlHelper(boolean myUseAppData, String myAppDataFolderName) {
+		consoleHelper = new ConsoleHelper();
+		this.useAppData = myUseAppData;
+		this.appDataFolderName = myAppDataFolderName;		
+	}
+		
+	
 	public XML loadXML(String filename, String options) {
 		try {
 			BufferedReader reader = createReader(filename);
@@ -80,17 +94,32 @@ public class XmlHelper {
 		return null;
 	}
 
+		
 	// ---------------------------------------------------------------------------
 	// GetAbsoluteFilePathStringFromXml
 	// ---------------------------------------------------------------------------
-	public String GetAbsoluteFilePathStringFromXml(String nodePath, XML[] xml) {
+	//added this underload (opposite of overload) for backward compatibility of
+	// function calls before "useAppData" was an option
+//	public String GetAbsoluteFilePathStringFromXml(String nodePath, XML[] xml) {
+//		return GetAbsoluteFilePathStringFromXml(nodePath, xml, false, "");
+//	}
+	
+	
+	// ---------------------------------------------------------------------------
+	// GetAbsoluteFilePathStringFromXml
+	// ---------------------------------------------------------------------------
+	public String GetAbsoluteFilePathStringFromXml(String nodePath, XML[] xml, boolean useAppData, String appDataFolderName) {
 		consoleHelper.PrintMessage("GetAbsoluteFilePathStringFromXml");
 
 		String myString = GetDataFromXml(nodePath, xml);
 
 		if (!myString.contains(":")) {
 			// myString = sketchPath("") + myString;
-			myString = System.getProperty("user.dir") + myString;
+			if (useAppData) {
+				myString = System.getenv("APPDATA") + File.separator + appDataFolderName +  myString;
+			} else {
+				myString = System.getProperty("user.dir") + myString;
+			}
 		}
 
 		consoleHelper.PrintMessage("node = " + myString);
@@ -105,7 +134,8 @@ public class XmlHelper {
 
 		// ConsoleHelper.PrintMessage("XML dump = " + xml[0].toString());
 
-		String[] nodeName = nodePath.split("\\.");
+		//String[] nodeName = nodePath.split("\\.");
+		String[] nodeName = nodePath.split(File.separator + ".");
 
 		// drill into the xml nodes (replacing "node" with the next node down on each
 		// iteration) until we reach the final node
@@ -129,14 +159,14 @@ public class XmlHelper {
 	// ---------------------------------------------------------------------------
 	public XML[] GetXMLFromFile(String xmlFilePath, String fallbackXmlFilePath) {
 		
-		FileHelper fileHelper = new FileHelper();
+		FileHelper fileHelper = new FileHelper(useAppData, appDataFolderName);
 		
 		consoleHelper.PrintMessage("GetXMLFromFile");
 
 		consoleHelper.PrintMessage("xmlFilePath = " + xmlFilePath);
 		consoleHelper.PrintMessage("fallbackXmlFilePath = " + fallbackXmlFilePath);
 
-		File xmlFile = fileHelper.GetFileFromAbsoluteOrRelativeFilePath(xmlFilePath);
+		File xmlFile = fileHelper.GetFileFromAbsoluteOrRelativeFilePath(xmlFilePath, useAppData, appDataFolderName);
 		XML[] xml = new XML[1];
 		
 		//if xmlFilePath whiffs, look to fallbackXmlFilePath
@@ -187,20 +217,20 @@ public class XmlHelper {
 	// AlterXML (Overload)
 	// SEE: https://www.mkyong.com/java/how-to-modify-xml-file-in-java-dom-parser/
 	// ---------------------------------------------------------------------------
-	public void AlterXML(String nodeName, String nodeValue, String xmlFilePath) {
+	public void AlterXML(String nodeName, String nodeValue, String xmlFilePath, boolean useAppData, String appDataFolderName) {
 		consoleHelper.PrintMessage("AlterXML (Overload)");
 
 		String[][] myXmlData = new String[1][3];
 		myXmlData[0] = new String[] { nodeName, nodeValue, "0" };
 
-		AlterXML(myXmlData, xmlFilePath);
+		AlterXML(myXmlData, xmlFilePath, useAppData, appDataFolderName);
 	}
 
 	// ---------------------------------------------------------------------------
 	// AlterXML
 	// SEE: https://www.mkyong.com/java/how-to-modify-xml-file-in-java-dom-parser/
 	// ---------------------------------------------------------------------------
-	public void AlterXML(String[][] xmlData, String xmlFilePath) {
+	public void AlterXML(String[][] xmlData, String xmlFilePath, boolean useAppData, String appDataFolderName) {
 		consoleHelper.PrintMessage("AlterXML");
 
 		try {
@@ -211,7 +241,11 @@ public class XmlHelper {
 			if (xmlFilePath.contains(":")) {
 				xmlFile = new File(xmlFilePath);
 			} else {
-				xmlFile = new File(System.getProperty("user.dir"), xmlFilePath);
+				if (useAppData)	{
+					xmlFile = new File(System.getenv("APPDATA") + File.separator + appDataFolderName, xmlFilePath);
+				} else {
+					xmlFile = new File(System.getProperty("user.dir"), xmlFilePath);
+				}
 			}
 
 			String filepath = xmlFile.getAbsolutePath();
@@ -222,7 +256,8 @@ public class XmlHelper {
 
 			// for every xml tag/value we're trying to update
 			for (int i = 0; i < xmlData.length; i++) {
-				String[] nodePath = xmlData[i][0].split("\\.");
+				//String[] nodePath = xmlData[i][0].split("\\.");
+				String[] nodePath = xmlData[i][0].split(File.separator + ".");
 				String finalNodeName = nodePath[nodePath.length - 1];
 
 				NodeList nodeList = doc.getElementsByTagName(finalNodeName);

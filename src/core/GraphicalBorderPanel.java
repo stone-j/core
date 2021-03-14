@@ -26,18 +26,35 @@ public class GraphicalBorderPanel extends JPanel {
 	BufferedImage bot_left;
 	BufferedImage left;
 	
-	public GraphicalBorderPanel(String myBorderFolder) {
+	public boolean useAppData;
+	public String appDataFolderName;
+	
+	private String userFolder;
+	
+	//constructor
+	public GraphicalBorderPanel(String myBorderFolder, boolean myUseAppData, String myAppDataFolderName) {
 		super();
 		borderFolder = myBorderFolder;
 		consoleHelper.PrintMessage("If you invoke the GraphicalBorderPanel constructor with only argument [String myBorderFolder], you must call buildPanel(JPanel myCentralJPanel) later to avoid a null pointer exception.");
+		this.useAppData = myUseAppData;
+		this.appDataFolderName = myAppDataFolderName;
+		if (useAppData) {
+			this.userFolder = System.getenv("APPDATA") + File.separator + appDataFolderName;
+		} else {
+			this.userFolder = System.getProperty("user.dir");
+		}
 	}
 	
-	public GraphicalBorderPanel(JPanel myCentralJPanel, String myBorderFolder) {
+	//constructor
+	public GraphicalBorderPanel(JPanel myCentralJPanel, String myBorderFolder, boolean myUseAppData, String myAppDataFolderName) {
 		super();
 		borderFolder = myBorderFolder;
 		centralJPanel = myCentralJPanel;
+		this.useAppData = myUseAppData;
+		this.appDataFolderName = myAppDataFolderName;
 		buildPanel();
 	}
+	
 	
 	public void buildPanel(JPanel myCentralJPanel) {
 		centralJPanel = myCentralJPanel;
@@ -65,14 +82,14 @@ public class GraphicalBorderPanel extends JPanel {
 		bot_left 	= null;
 		left 		= null;
 		try {
-			top_left 	= ImageIO.read(new File(System.getProperty("user.dir") + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "top_left.png"));
-			top 		= ImageIO.read(new File(System.getProperty("user.dir") + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "top.png"));
-			top_right 	= ImageIO.read(new File(System.getProperty("user.dir") + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "top_right.png"));
-			right 		= ImageIO.read(new File(System.getProperty("user.dir") + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "right.png"));
-			bot_right 	= ImageIO.read(new File(System.getProperty("user.dir") + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "bot_right.png"));
-			bot 		= ImageIO.read(new File(System.getProperty("user.dir") + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "bot.png"));
-			bot_left 	= ImageIO.read(new File(System.getProperty("user.dir") + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "bot_left.png"));
-			left 		= ImageIO.read(new File(System.getProperty("user.dir") + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "left.png"));
+			top_left 	= ImageIO.read(new File(userFolder + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "top_left.png"));
+			top 		= ImageIO.read(new File(userFolder + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "top.png"));
+			top_right 	= ImageIO.read(new File(userFolder + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "top_right.png"));
+			right 		= ImageIO.read(new File(userFolder + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "right.png"));
+			bot_right 	= ImageIO.read(new File(userFolder + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "bot_right.png"));
+			bot 		= ImageIO.read(new File(userFolder + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "bot.png"));
+			bot_left 	= ImageIO.read(new File(userFolder + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "bot_left.png"));
+			left 		= ImageIO.read(new File(userFolder + File.separator + "images" + File.separator + "borders" + File.separator + borderFolder + File.separator + "left.png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

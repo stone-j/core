@@ -14,12 +14,16 @@ public class ExceptionLogger implements UncaughtExceptionHandler {
 	Logger logger;
 	FileHandler fileHandler;
 	
-	public ExceptionLogger() {
+	public ExceptionLogger(boolean useAppData, String appDataFolderName) {
 
 		logger = Logger.getLogger("MyLog");
 	    
 	    try {  
-	    	fileHandler = new FileHandler(System.getProperty("user.dir") + File.separator + "log" + File.separator + "log.txt");  
+	    	if (useAppData) {
+	    		fileHandler = new FileHandler(System.getenv("APPDATA") + File.separator + appDataFolderName + File.separator + "log" + File.separator + "log.txt");  
+	    	} else {
+	    		fileHandler = new FileHandler(System.getProperty("user.dir") + File.separator + "log" + File.separator + "log.txt");
+	    	}
 	        logger.addHandler(fileHandler);
 	        SimpleFormatter formatter = new SimpleFormatter();  
 	        fileHandler.setFormatter(formatter);  

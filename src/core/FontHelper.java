@@ -8,9 +8,19 @@ import java.io.IOException;
 
 public class FontHelper {
 	
-	public ConsoleHelper consoleHelper = new ConsoleHelper();
+	public ConsoleHelper consoleHelper;
+	public boolean useAppData;
+	public String appDataFolderName;
 	
-	public Font loadFont(String fontFileName, int fontSize, ExceptionLogger exceptionLogger) {	
+	
+	public FontHelper(boolean myUseAppData, String myAppDataFolderName) {
+		this.consoleHelper = new ConsoleHelper();
+		this.useAppData = myUseAppData;
+		this.appDataFolderName = myAppDataFolderName;
+	}
+	
+	
+	public Font loadFont(String fontFileName, int fontSize, ExceptionLogger exceptionLogger, boolean useAppData, String appDataFolderName) {	
 	
 		//initialize the font to a default
 		Font font = new Font("", Font.PLAIN, fontSize);
@@ -18,8 +28,13 @@ public class FontHelper {
 		//Attempt to load the custom font
 		try {
 		    //create the font to use. Specify the size!
-			consoleHelper.PrintMessage("Attempting to load font file: " + System.getProperty("user.dir") + File.separator + "fonts" + File.separator + fontFileName);
-			font = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + File.separator + "fonts" + File.separator + fontFileName)).deriveFont((float)fontSize);
+			if (useAppData) {
+				consoleHelper.PrintMessage("Attempting to load font file: " + System.getenv("APPDATA") + File.separator + appDataFolderName + File.separator + "fonts" + File.separator + fontFileName);
+				font = Font.createFont(Font.TRUETYPE_FONT, new File(System.getenv("APPDATA") + File.separator + appDataFolderName + File.separator + "fonts" + File.separator + fontFileName)).deriveFont((float)fontSize);
+			} else {
+				consoleHelper.PrintMessage("Attempting to load font file: " + System.getProperty("user.dir") + File.separator + "fonts" + File.separator + fontFileName);
+				font = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + File.separator + "fonts" + File.separator + fontFileName)).deriveFont((float)fontSize);
+			}
 		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		    //register the font
 		    ge.registerFont(font);

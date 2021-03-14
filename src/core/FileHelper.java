@@ -9,7 +9,17 @@ import java.io.OutputStream;
 
 public class FileHelper {
 	
-	public ConsoleHelper consoleHelper = new ConsoleHelper();
+	public ConsoleHelper consoleHelper;
+	public boolean useAppData;
+	public String appDataFolderName;
+	
+	
+	public FileHelper(boolean myUseAppData, String myAppDataFolderName) {
+		consoleHelper = new ConsoleHelper();
+		this.useAppData = myUseAppData;
+		this.appDataFolderName = myAppDataFolderName;
+	}
+	
 	
 	//---------------------------------------------------------------------------
 	// getExtension
@@ -42,14 +52,18 @@ public class FileHelper {
 	//---------------------------------------------------------------------------
 	// the idea here is an absolute path will contain a colon, and a relative path
 	// will not.
-	public File GetFileFromAbsoluteOrRelativeFilePath(String filePath) {
+	public File GetFileFromAbsoluteOrRelativeFilePath(String filePath, boolean useAppData, String appDataFolderName) {
 		
 		File file;
 		
 		if (filePath.contains(":")) {
 			file = new File(filePath);
 		} else {
-			file = new File(System.getProperty("user.dir"), filePath);
+			if (useAppData) {
+				file = new File(System.getenv("APPDATA") + File.separator + appDataFolderName, filePath);
+			} else {
+				file = new File(System.getProperty("user.dir"), filePath);
+			}
 		}
 		
 		return file;
