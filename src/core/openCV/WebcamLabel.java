@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.JLabel;
 
-import core.Graphics2DMaker;
+import core.imaging.Graphics2DMaker;
 import processing.core.PVector;
 
 public class WebcamLabel extends JLabel {

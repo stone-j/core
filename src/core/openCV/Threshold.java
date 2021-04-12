@@ -3,8 +3,8 @@ package core.openCV;
 import java.util.ArrayList;
 import java.util.List;
 
-import core.ArrayHelper;
-import core.MathHelper;
+import core.helper.MathHelper;
+import core.variable.ArrayHelper;
 
 public class Threshold {
 	

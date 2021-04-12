@@ -35,10 +35,9 @@ import org.opencv.imgproc.Imgproc;
 import processing.core.PImage;
 import processing.core.PConstants;
 import processing.core.PVector;
-
-import core.ConsoleHelper;
-import core.MathHelper;
-import core.ProcessingHelper;
+import core.helper.MathHelper;
+import core.helper.ProcessingHelper;
+import core.logging.ConsoleHelper;
 
 /**
 * OpenCV is the main class for using OpenCV for Processing. Most of the documentation is found here.
